@@ -35,7 +35,7 @@ endfunction
 
 " readonly
 function! status#readonly() abort
-    return s:capWidth((&readonly || !&modifiable) ? '' : '', 70)
+    return s:capWidth((&readonly || !&modifiable) ? '⏏' : '', 70)
 endfunction
 
 " filename
@@ -48,7 +48,7 @@ endfunction
 " git branch
 function! status#gitbranch() abort
     let l:git = fugitive#head()
-    return s:capWidth(empty(l:git) ? '' : ' ' . l:git, 70)
+    return s:capWidth(empty(l:git) ? '' : '⇅ ' . l:git, 70)
 endfunction
 
 " trailing

@@ -19,6 +19,7 @@ endif
 call plug#begin('~/.config/nvim/plugged')
 
 " fzf
+Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 
 " git
@@ -42,26 +43,21 @@ Plug 'tpope/vim-jdaddy'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'xtal8/traces.vim'
+Plug 'markonm/traces.vim'
 
 " lang
 Plug 'dense-analysis/ale'
 
 " fs
-Plug 'scrooloose/nerdtree'
+Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " theme
-Plug 'kaicataldo/material.vim'
+Plug 'huyvohcmc/atlas.vim'
 
 " lightline
 Plug 'itchyny/lightline.vim'
 Plug 'maximbaz/lightline-ale'
-
-" don't load in tty
-if &term !=? 'linux' || has('gui_running')
-    Plug 'ryanoasis/vim-devicons'
-endif
 
 call plug#end()
 
@@ -138,10 +134,6 @@ nnoremap <leader>sw :Windows<CR>
 
 "" lightline
 let g:lightline = {}
-let g:lightline.colorscheme = 'material_vim'
-
-" let g:lightline.separator = { 'left': '', 'right': '' }
-" let g:lightline.subseparator = { 'left': '', 'right': '' }
 
 let g:lightline.active = {
             \   'left':  [ [ 'mode', 'paste' ],
@@ -272,13 +264,8 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
             \     'Unknown'   : '?'
             \ }
 
-highlight! link NERDTreeFlags NERDTreeDir
-highlight! link NERDTreeGitStatusIgnored NERDTreeFile
-
 augroup NERDTreeMod
     autocmd!
-    " dim git ignored files/directories
-    " autocmd FileType nerdtree call s:NERDGitDimIgnoredFiles()
     " automatically close NERDTree if its the only open buffer
     autocmd BufEnter * call s:NERDCloseIfOnlyControlWinLeft()
 augroup END
@@ -292,48 +279,6 @@ function! s:NERDCloseIfOnlyControlWinLeft()
         q
     endif
 endfunction
-
-function! s:NERDGitDimIgnoredFiles()
-    let gitcmd = 'git -c color.status=false status -s --ignored'
-    if exists('b:NERDTree')
-        let root = b:NERDTree.root.path.str()
-    else
-        let root = './'
-    endif
-    let files = split(system(gitcmd.' '.root), '\n')
-
-    call s:NERDGitFindIgnoredFiles(files)
-endfunction
-
-function! s:NERDGitFindIgnoredFiles(files)
-    for file in a:files
-        let pre = file[0:1]
-        if pre ==? '!!'
-            let ignored = split(file[3:], '/')[-1]
-            exec 'syn match Comment #\<.....'
-                        \ . escape(ignored, '~')
-                        \ . '\(\.\)\@!\># containedin=
-                        \ NERDTreeFile,
-                        \ hideBracketsInNerdTree,
-                        \ NERDTreeNodeDelimiters,
-                        \ NERDTreeFlags,
-                        \ NERDTreeDir'
-        endif
-    endfor
-endfunction
-
-let NERDTreeDirArrowExpandable = "\u00a0"
-let NERDTreeDirArrowCollapsible = "\u00a0"
-let NERDTreeNodeDelimiter = "\x07"
-
-"" devicons
-
-let g:DevIconsEnableFoldersOpenClose = 1
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:WebDevIconsNerdTreeAfterGlyphPadding = '  '
-let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols = {} " needed
-let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*\.go$'] = ''
-
 
 """""""""""""""""""""""
 "  LANGUAGE SETTINGS  "
@@ -474,8 +419,8 @@ endif
 "  THEME  "
 """""""""""
 
-let g:material_theme_style = 'darker'
-colorscheme material
+colorscheme atlas
+let g:lightline.colorscheme = 'atlas'
 
 augroup StatusLineUpdate
     autocmd!
